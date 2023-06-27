@@ -1,0 +1,30 @@
+version: '1.2'
+
+services:
+  db:
+    image: postgres:15
+    container_name: db_app
+    ports:
+      - 4545:5432
+    env_file:
+      - .env-non-for-dev
+    volumes:
+      - db_data:/var/lib/postgresql/data/
+
+  app:
+    build:
+      context: .
+    env_file:
+      - .env-non-for-dev
+    container_name: fastapi_app
+    command: ["/fastapi_app/docker/app.sh"]
+    ports:
+      - 9999:8000
+    depends_on:
+      - db
+    volumes:
+      - app_set:/var/lib/app/data/
+
+volumes:
+  db_data: null
+  app_set: null
